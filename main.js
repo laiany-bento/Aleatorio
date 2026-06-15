@@ -1,93 +1,270 @@
-// --- CENTRAL DE EFEITOS SONOROS SINTÉTICOS (Web Audio API) ---
-// Gera sons retro diretamente via código sem precisar de arquivos externos .mp3
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-function playTone(frequency, type, duration) {
-    const oscillator = audioCtx.createOscillator();
-    const gainNode = audioCtx.createGain();
-    
-    oscillator.type = type;
-    oscillator.frequency.value = frequency;
-    
-    gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
-    // Efeito fade-out suave para evitar estalidos
-    gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
-    
-    oscillator.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
-    
-    oscillator.start();
-    oscillator.stop(audioCtx.currentTime + duration);
-}
-
-// Configurações de som para ações do Arcade
-const soundFX = {
-    click: () => playTone(600, 'square', 0.08),
-    victory: () => {
-        playTone(400, 'triangle', 0.1);
-        setTimeout(() => playTone(600, 'triangle', 0.1), 100);
-        setTimeout(() => playTone(900, 'triangle', 0.3), 200);
-    },
-    achievement: () => {
-        playTone(523.25, 'sine', 0.1); // C5
-        setTimeout(() => playTone(659.25, 'sine', 0.1), 80);  // E5
-        setTimeout(() => playTone(783.99, 'sine', 0.1), 160); // G5
-        setTimeout(() => playTone(1046.50, 'sine', 0.4), 240); // C6
-    }
+// --- SISTEMA DE PERSISTÊNCIA (LOCAL STORAGE) ---
+let playerData = {
+    xp: parseInt(localStorage.getItem('gv_xp')) || 0,
+    partidas: parseInt(localStorage.getItem('gv_partidas')) || 0,
+    vitorias: parseInt(localStorage.getItem('gv_vitorias')) || 0,
+    conquistas: JSON.parse(localStorage.getItem('gv_conquistas')) || []
 };
 
-// --- SIMULAÇÃO DA INTERATIVIDADE DO ARCADE ---
-let totalMatches = 42;
-let totalWins = 28;
-
-function playGame(gameName) {
-    soundFX.click();
-    
-    // Alerta estilizado simulando o carregamento da máquina de arcade
-    alert(`🕹️ Conectando à cabine virtual de [ ${gameName} ]...\nPrepare seus reflexos!`);
-    
-    // Simulação dinâmica: Incrementa as estatísticas em tempo real na tela
-    totalMatches++;
-    if (Math.random() > 0.4) { // 60% de chance simulada de vitória
-        totalWins++;
-        setTimeout(() => soundFX.victory(), 600);
-    }
-    
-    // Atualiza os valores na interface manipulando o DOM
-    document.getElementById('stat-matches').innerText = totalMatches;
-    document.getElementById('stat-wins').innerText = totalWins;
-    
-    // Evento Dinâmico: Desbloqueia a conquista secreta ao jogar o Quiz ou Snake
-    if (gameName === 'Quiz') {
-        unlockAchievement('ach-quiz');
-    } else if (gameName === 'Snake') {
-        unlockAchievement('ach-snake');
-    }
+// --- EMISSOR DE AUDIO RETRO (Web Audio API) ---
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function bleep(freq, type, duration) {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type; osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(); osc.stop(audioCtx.currentTime + duration);
 }
 
-function unlockAchievement(id) {
-    const achCard = document.getElementById(id);
-    if (achCard && achCard.classList.contains('locked')) {
-        achCard.classList.remove('locked');
-        achCard.classList.add('unlocked');
-        
-        // Substitui o ícone de cadeado pelo ícone de conquista ganha
-        const icon = achCard.querySelector('.badge i');
-        icon.className = id === 'ach-snake' ? 'fa-solid fa-crown' : 'fa-solid fa-award';
-        
-        // Emite o som glorioso de conquista
-        soundFX.achievement();
-    }
-}
+const sons = {
+    click: () => bleep(600, 'square', 0.05),
+    win: () => { bleep(440, 'sine', 0.1); setTimeout(() => bleep(880, 'sine', 0.2), 100); },
+    fail: () => { bleep(250, 'sawtooth', 0.2); }
+};
 
-// --- CONTROLE DE NAVEGAÇÃO ILUMINADA ---
-// Altera o estado do menu ativo conforme o usuário rola a página ou clica nos links
-const navLinks = document.querySelectorAll('.nav-links a');
+// --- MOTOR DE ALTERNAÇÃO DE ABAS ---
+const botoesNavegacao = document.querySelectorAll('.nav-btn');
+const conteudosAbas = document.querySelectorAll('.tab-content');
 
-navLinks.forEach(link => {
-    link.addEventListener('click', function() {
-        soundFX.click();
-        navLinks.forEach(item => item.classList.remove('active'));
-        this.classList.add('active');
+botoesNavegacao.forEach(botao => {
+    botao.addEventListener('click', (e) => {
+        e.preventDefault();
+        sons.click();
+        const alvo = botao.getAttribute('data-target');
+        mudarAba(alvo);
     });
 });
+
+function mudarAba(idAba) {
+    conteudosAbas.forEach(aba => aba.classList.remove('active'));
+    botoesNavegacao.forEach(btn => btn.classList.remove('active'));
+
+    document.getElementById(idAba).classList.add('active');
+    const botaoAtivo = document.querySelector(`[data-target="${idAba}"]`);
+    if(botaoAtivo) botaoAtivo.classList.add('active');
+}
+
+// --- ATUALIZAÇÃO DO STATUS DO JOGADOR ---
+function atualizarDados(ganhou, xpGanho = 10) {
+    playerData.partidas++;
+    if (ganhou) {
+        playerData.vitorias++;
+        playerData.xp += xpGanho;
+        sons.win();
+    } else {
+        sons.fail();
+    }
+    
+    // Salva no Navegador
+    localStorage.setItem('gv_xp', playerData.xp);
+    localStorage.setItem('gv_partidas', playerData.partidas);
+    localStorage.setItem('gv_vitorias', playerData.vitorias);
+    
+    renderizarHUD();
+    checarConquistas();
+}
+
+function renderizarHUD() {
+    const nivel = Math.floor(playerData.xp / 50) + 1;
+    document.getElementById('hud-level').innerHTML = `<i class="fa-solid fa-ranking-star"></i> Nível ${nivel}`;
+    document.getElementById('hud-coins').innerHTML = `<i class="fa-solid fa-coins" style="color: #ffd700;"></i> ${playerData.xp} XP`;
+    
+    if(document.getElementById('st-partidas')) {
+        document.getElementById('st-partidas').innerText = playerData.partidas;
+        document.getElementById('st-vitorias').innerText = playerData.vitorias;
+        document.getElementById('st-xp').innerText = playerData.xp;
+    }
+}
+
+// --- CONTROLE DA MODAL DO FLIPERAMA ---
+function abrirJogo(nomeJogo) {
+    sons.click();
+    document.getElementById('modal-game-title').innerText = nomeJogo.toUpperCase();
+    document.getElementById('arcade-modal').style.display = 'flex';
+    
+    const arena = document.getElementById('game-arena');
+    arena.innerHTML = '';
+
+    if (nomeJogo === 'Jogo da Velha') iniciarVelha(arena);
+    else if (nomeJogo === 'Pedra, Papel e Tesoura') iniciarJokenpo(arena);
+    else if (nomeJogo === 'Quiz') iniciarQuiz(arena);
+    else if (nomeJogo === 'Forca') iniciarForca(arena);
+    else arena.innerHTML = `<p style="color:var(--texto-suave)">A cabine do ${nomeJogo} está recebendo uma atualização de software. Jogue as outras 4 cabines disponíveis!</p>`;
+}
+
+function fecharArcade() {
+    sons.click();
+    document.getElementById('arcade-modal').style.display = 'none';
+    document.getElementById('game-arena').innerHTML = '';
+}
+
+// ==========================================
+// CENTRAL DE MINIJOGOS (MÓDULOS DE LOGICA)
+// ==========================================
+
+// 1. JOGO DA VELHA
+function iniciarVelha(arena) {
+    let tab = ['', '', '', '', '', '', '', '', ''];
+    arena.innerHTML = `<div style="max-width:270px; margin: 0 auto;">` + 
+        tab.map((_, i) => `<div class="cell" id="c-${i}" onclick="jogarVelha(${i})"></div>`).join('') + 
+        `</div><p id="velha-txt" class="text-green" style="margin-top:10px;">Sua vez (X)</p>`;
+    window.velhaTab = tab; window.velhaAtivo = true;
+}
+window.jogarVelha = function(i) {
+    if(!window.velhaAtivo || window.velhaTab[i] !== '') return;
+    sons.click();
+    window.velhaTab[i] = 'X';
+    document.getElementById(`c-${i}`).innerText = 'X';
+    if(venceuVelha(window.velhaTab, 'X')) {
+        document.getElementById('velha-txt').innerText = "Você ganhou! +20XP";
+        window.velhaAtivo = false; atualizarDados(true, 20); return;
+    }
+    if(!window.velhaTab.includes('')) { document.getElementById('velha-txt').innerText = "Empate!"; atualizarDados(false); return; }
+    
+    window.velhaAtivo = false;
+    setTimeout(() => {
+        let livres = window.velhaTab.map((v, idx) => v === '' ? idx : null).filter(v => v !== null);
+        let bot = livres[Math.floor(Math.random() * livres.length)];
+        window.velhaTab[bot] = 'O';
+        document.getElementById(`c-${bot}`).innerText = 'O';
+        if(venceuVelha(window.velhaTab, 'O')) {
+            document.getElementById('velha-txt').innerText = "CPU Venceu!";
+            atualizarDados(false);
+        } else {
+            document.getElementById('velha-txt').innerText = "Sua vez (X)";
+            window.velhaAtivo = true;
+        }
+    }, 400);
+}
+function venceuVelha(t, p) {
+    const regras = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+    return regras.some(r => r.every(idx => t[idx] === p));
+}
+
+// 2. PEDRA, PAPEL E TESOURA
+function iniciarJokenpo(arena) {
+    arena.innerHTML = `
+        <div class="jokenpo-controls">
+            <button class="btn-choice" onclick="jogarJKP('✊')">✊</button>
+            <button class="btn-choice" onclick="jogarJKP('✋')">✋</button>
+            <button class="btn-choice" onclick="jogarJKP('✌️')">✌️</button>
+        </div>
+        <p id="jkp-res" style="margin-top:25px; font-family:'Orbitron'; font-size:1.1rem;"></p>
+    `;
+}
+window.jogarJKP = function(opcaoPlayer) {
+    sons.click();
+    const lista = ['✊', '✋', '✌️'];
+    const opcaoCPU = lista[Math.floor(Math.random() * 3)];
+    const res = document.getElementById('jkp-res');
+    if(opcaoPlayer === opcaoCPU) { res.innerHTML = `Empate! Ambos escolheram ${opcaoPlayer}`; atualizarDados(false); }
+    else if ((opcaoPlayer==='✊'&&opcaoCPU==='✌️') || (opcaoPlayer==='✋'&&opcaoCPU==='✊') || (opcaoPlayer==='✌️'&&opcaoCPU==='✋')) {
+        res.innerHTML = `Você: ${opcaoPlayer} vs CPU: ${opcaoCPU}<br><span class="text-green">Vitória! +10XP</span>`;
+        atualizarDados(true, 10);
+    } else { res.innerHTML = `Você: ${opcaoPlayer} vs CPU: ${opcaoCPU}<br><span style="color:#ff0055">Derrota!</span>`; atualizarDados(false); }
+}
+
+// 3. QUIZ GEEK
+function iniciarQuiz(arena) {
+    window.quizData = [
+        { q: "Qual componente é o 'cérebro' do PC?", o: ["Memória RAM", "Processador (CPU)", "Placa de Vídeo"], r: 1 },
+        { q: "O que significa HTML?", o: ["HyperText Markup Language", "High Technology Motor Link", "Hyper Transfer Multi Language"], r: 0 }
+    ];
+    window.quizEtapa = 0;
+    renderEtapaQuiz(arena);
+}
+function renderEtapaQuiz(arena) {
+    if(window.quizEtapa >= window.quizData.length) {
+        arena.innerHTML = `<p class="text-green" style="font-family:'Orbitron';">Parabéns! Você concluiu o Quiz! +30XP</p>`;
+        atualizarDados(true, 30);
+        playerData.conquistas.push('cq-quiz');
+        localStorage.setItem('gv_conquistas', JSON.stringify(playerData.conquistas));
+        return;
+    }
+    let item = window.quizData[window.quizEtapa];
+    arena.innerHTML = `<p style="margin-bottom:15px; font-weight:500;">${item.q}</p>` +
+        item.o.map((opt, id) => `<button class="quiz-option" onclick="responderQuiz(${id})">${opt}</button>`).join('');
+}
+window.responderQuiz = function(idEscolhido) {
+    if(idEscolhido === window.quizData[window.quizEtapa].r) {
+        window.quizEtapa++;
+        renderEtapaQuiz(document.getElementById('game-arena'));
+    } else {
+        document.getElementById('game-arena').innerHTML = `<p style="color:#ff0055">Resposta Errada! Fim de Jogo.</p>`;
+        atualizarDados(false);
+    }
+}
+
+// 4. JOGO DA FORCA
+function iniciarForca(arena) {
+    const palavras = ["DEVELOPER", "TECLADO", "ARCADE", "MONITOR", "PIXEL"];
+    window.forcaPalavra = palavras[Math.floor(Math.random() * palavras.length)];
+    window.forcaDescobertas = Array(window.forcaPalavra.length).fill("_");
+    window.forcaErros = 0;
+    renderForca();
+}
+function renderForca() {
+    const arena = document.getElementById('game-arena');
+    if(!window.forcaDescobertas.includes("_")) {
+        arena.innerHTML = `<p class="text-green" style="font-family:'Orbitron'; font-size:1.3rem;">Palavra Descoberta: ${window.forcaPalavra}!<br>+25 XP</p>`;
+        atualizarDados(true, 25); return;
+    }
+    if(window.forcaErros >= 5) {
+        arena.innerHTML = `<p style="color:#ff0055; font-family:'Orbitron'; font-size:1.2rem;">GAME OVER!<br>A palavra era ${window.forcaPalavra}</p>`;
+        atualizarDados(false); return;
+    }
+    const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+    arena.innerHTML = `
+        <p style="color:var(--texto-suave)">Erros: ${window.forcaErros} de 5</p>
+        <div class="forca-word">${window.forcaDescobertas.join(" ")}</div>
+        <div class="forca-teclado">
+            ${letras.map(l => `<button class="btn-letra" id="l-${l}" onclick="tentarLetra('${l}')">${l}</button>`).join('')}
+        </div>
+    `;
+}
+window.tentarLetra = function(l) {
+    sons.click();
+    document.getElementById(`l-${l}`).disabled = true;
+    if(window.forcaPalavra.includes(l)) {
+        for(let i=0; i<window.forcaPalavra.length; i++) {
+            if(window.forcaPalavra[i] === l) window.forcaDescobertas[i] = l;
+        }
+    } else { window.forcaErros++; }
+    renderForca();
+}
+
+// --- RECURSO: LOJA DE CORES ---
+window.mudarTema = function(cor) {
+    sons.click();
+    document.documentElement.style.setProperty('--azul-neon', cor);
+    header.style.borderBottomColor = cor;
+}
+
+// --- CONQUISTAS MECÂNICA ---
+function checarConquistas() {
+    if(playerData.vitorias >= 1 && !playerData.conquistas.includes('cq-1')) playerData.conquistas.push('cq-1');
+    if(playerData.partidas >= 10 && !playerData.conquistas.includes('cq-10')) playerData.conquistas.push('cq-10');
+    
+    localStorage.setItem('gv_conquistas', JSON.stringify(playerData.conquistas));
+    renderizarConquistas();
+}
+
+function renderizarConquistas() {
+    playerData.conquistas.forEach(id => {
+        const elemento = document.getElementById(id);
+        if(elemento && elemento.classList.contains('locked')) {
+            elemento.classList.remove('locked');
+            elemento.classList.add('unlocked');
+            const icon = elemento.querySelector('.badge i');
+            icon.className = "fa-solid fa-award";
+        }
+    });
+}
+
+// INICIALIZAÇÃO AUTOMÁTICA AO CARREGAR O SITE
+window.onload = () => {
+    renderizarHUD();
+    checarConquistas();
+};

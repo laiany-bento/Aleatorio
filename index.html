@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GameVerse | Central Arcade Futurista</title>
+    <title>GameVerse | Plataforma de Minijogos</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
@@ -17,180 +17,151 @@
             <div class="logo">
                 <i class="fa-solid fa-gamepad"></i> <span>GameVerse</span>
             </div>
+            <div class="player-hud">
+                <span id="hud-level"><i class="fa-solid fa-ranking-star"></i> Nível 1</span>
+                <span id="hud-coins"><i class="fa-solid fa-coins" style="color: #ffd700;"></i> 0 XP</span>
+            </div>
             <nav>
                 <ul class="nav-links">
-                    <li><a href="#inicio" class="active">Início</a></li>
-                    <li><a href="#jogos">Jogos</a></li>
-                    <li><a href="#ranking">Ranking</a></li>
-                    <li><a href="#conquistas">Conquistas</a></li>
+                    <li><a href="#" class="nav-btn active" data-target="aba-inicio">Início</a></li>
+                    <li><a href="#" class="nav-btn" data-target="aba-jogos">Jogos</a></li>
+                    <li><a href="#" class="nav-btn" data-target="aba-ranking">Ranking</a></li>
+                    <li><a href="#" class="nav-btn" data-target="aba-conquistas">Conquistas</a></li>
+                    <li><a href="#" class="nav-btn" data-target="aba-loja"><i class="fa-solid fa-shop"></i> Loja</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <section id="inicio" class="hero container">
-        <div class="hero-content">
-            <h1>GAMEVERSE</h1>
-            <p class="slogan">Diversão sem limites em um só lugar.</p>
-            <p class="subtitle">Entre no arcade do futuro e domine os tabuleiros virtuais.</p>
-            <a href="#jogos" class="btn-glow">JOGAR AGORA</a>
-        </div>
-    </section>
+    <main class="container content-wrapper">
 
-    <section id="jogos" class="games-section container">
-        <h2 class="section-title">Nossas Máquinas</h2>
-        <div class="games-grid">
-            
-            <div class="arcade-card">
-                <div class="card-neon-border"></div>
-                <div class="card-content">
-                    <i class="fa-solid fa-hashtag game-icon"></i>
-                    <h3>Jogo da Velha</h3>
-                    <p>O clássico duelo de estratégia. Desafie a máquina ou um amigo.</p>
-                    <button class="btn-play" onclick="playGame('Jogo da Velha')">Jogar</button>
-                </div>
+        <section id="aba-inicio" class="tab-content active">
+            <div class="hero-content">
+                <h1>GAMEVERSE</h1>
+                <p class="slogan">Diversão sem limites em um só lugar.</p>
+                <p class="subtitle">Evolua seu nível, ganhe moedas virtuais e domine o fliperama futurista.</p>
+                <button class="btn-glow" onclick="mudarAba('aba-jogos')">JOGAR AGORA</button>
             </div>
+        </section>
 
-            <div class="arcade-card">
-                <div class="card-neon-border"></div>
-                <div class="card-content">
-                    <i class="fa-solid fa-hand-fist game-icon"></i>
-                    <h3>Pedra, Papel, Tesoura</h3>
-                    <p>Sorte ou pura leitura de mente? Faça a sua escolha.</p>
-                    <button class="btn-play" onclick="playGame('Pedra, Papel e Tesoura')">Jogar</button>
-                </div>
-            </div>
-
-            <div class="arcade-card">
-                <div class="card-neon-border"></div>
-                <div class="card-content">
-                    <i class="fa-solid fa-lightbulb game-icon"></i>
-                    <h3>Quiz Geek</h3>
-                    <p>Categoria: Tecnologia & Pop. Teste seus conhecimentos nerds.</p>
-                    <button class="btn-play" onclick="playGame('Quiz')">Jogar</button>
-                </div>
-            </div>
-
-            <div class="arcade-card">
-                <div class="card-neon-border"></div>
-                <div class="card-content">
-                    <i class="fa-solid fa-skull game-icon"></i>
-                    <h3>Jogo da Forca</h3>
-                    <p>Dificuldade: Média. Descubra a palavra antes que o tempo acabe.</p>
-                    <button class="btn-play" onclick="playGame('Forca')">Jogar</button>
-                </div>
-            </div>
-
-            <div class="arcade-card">
-                <div class="card-neon-border"></div>
-                <div class="card-content">
-                    <i class="fa-solid fa-worm game-icon"></i>
-                    <h3>Snake Retro</h3>
-                    <p>Recorde: 4.200 pts. Coma os pixels e aumente seu tamanho.</p>
-                    <button class="btn-play" onclick="playGame('Snake')">Jogar</button>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <section id="ranking" class="ranking-section container">
-        <div class="ranking-layout">
-            
-            <div class="ranking-box">
-                <h2 class="section-title"><i class="fa-solid fa-trophy text-green"></i> Top Hall of Fame</h2>
-                <table class="ranking-table">
-                    <thead>
-                        <tr>
-                            <th>Categoria</th>
-                            <th>Líder</th>
-                            <th>Pontuação</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><i class="fa-solid fa-worm"></i> Melhor no Snake</td>
-                            <td>Neo_Player</td>
-                            <td class="text-green">5.430 pts</td>
-                        </tr>
-                        <tr>
-                            <td><i class="fa-solid fa-lightbulb"></i> Melhor no Quiz</td>
-                            <td>ByteQueen</td>
-                            <td class="text-green">100% Precisão</td>
-                        </tr>
-                        <tr>
-                            <td><i class="fa-solid fa-skull"></i> Melhor na Forca</td>
-                            <td>ChronoTrigger</td>
-                            <td class="text-green">32 Palavras</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="stats-box">
-                <h2 class="section-title"><i class="fa-solid fa-chart-simple"></i> Suas Estatísticas</h2>
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <span class="stat-value" id="stat-matches">42</span>
-                        <span class="stat-label">Partidas Jogadas</span>
+        <section id="aba-jogos" class="tab-content">
+            <h2 class="section-title">Escolha sua Máquina</h2>
+            <div class="games-grid">
+                <div class="arcade-card">
+                    <div class="card-neon-border" style="background: var(--azul-neon);"></div>
+                    <div class="card-content">
+                        <i class="fa-solid fa-hashtag game-icon" style="color: var(--azul-neon);"></i>
+                        <h3>Jogo da Velha</h3>
+                        <p>Enfrente nossa IA em um duelo clássico de grade.</p>
+                        <button class="btn-play" onclick="abrirJogo('Jogo da Velha')">Iniciar</button>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-value text-green" id="stat-wins">28</span>
-                        <span class="stat-label">Vitórias</span>
+                </div>
+                <div class="arcade-card">
+                    <div class="card-neon-border" style="background: var(--roxo-neon);"></div>
+                    <div class="card-content">
+                        <i class="fa-solid fa-hand-fist game-icon" style="color: var(--roxo-neon);"></i>
+                        <h3>Pedra, Papel, Tesoura</h3>
+                        <p>O tradicional Jokenpô com engine de recompensas.</p>
+                        <button class="btn-play" onclick="abrirJogo('Pedra, Papel e Tesoura')">Iniciar</button>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-value" id="stat-fav">Snake</span>
-                        <span class="stat-label">Jogo Favorito</span>
+                </div>
+                <div class="arcade-card">
+                    <div class="card-neon-border" style="background: var(--verde-neon);"></div>
+                    <div class="card-content">
+                        <i class="fa-solid fa-lightbulb game-icon" style="color: var(--verde-neon);"></i>
+                        <h3>Quiz Geek</h3>
+                        <p>Responda perguntas sobre tecnologia e jogos.</p>
+                        <button class="btn-play" onclick="abrirJogo('Quiz')">Iniciar</button>
+                    </div>
+                </div>
+                <div class="arcade-card">
+                    <div class="card-neon-border" style="background: #ff0055;"></div>
+                    <div class="card-content">
+                        <i class="fa-solid fa-skull game-icon" style="color: #ff0055;"></i>
+                        <h3>Forca</h3>
+                        <p>Adivinhe a palavra secreta antes do enforcamento.</p>
+                        <button class="btn-play" onclick="abrirJogo('Forca')">Iniciar</button>
+                    </div>
+                </div>
+                <div class="arcade-card">
+                    <div class="card-neon-border" style="background: #ffaa00;"></div>
+                    <div class="card-content">
+                        <i class="fa-solid fa-worm game-icon" style="color: #ffaa00;"></i>
+                        <h3>Snake Retro</h3>
+                        <p>Colete os pixels brilhantes sem colidir nas paredes.</p>
+                        <button class="btn-play" onclick="abrirJogo('Snake')">Iniciar</button>
                     </div>
                 </div>
             </div>
+        </section>
 
+        <section id="aba-ranking" class="tab-content">
+            <div class="ranking-layout">
+                <div class="ranking-box">
+                    <h2 class="section-title"><i class="fa-solid fa-trophy text-green"></i> Líderes Globais</h2>
+                    <table class="ranking-table">
+                        <thead>
+                            <tr><th>Jogo</th><th>Líder</th><th>Recorde</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Snake Retro</td><td>Neo_Player</td><td class="text-green">5.430 pts</td></tr>
+                            <tr><td>Quiz Geek</td><td>ByteQueen</td><td class="text-green">100% acertos</td></tr>
+                            <tr><td>Forca</td><td>Chrono</td><td class="text-green">32 palavras</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="stats-box">
+                    <h2 class="section-title"><i class="fa-solid fa-chart-pie"></i> Seu Perfil</h2>
+                    <div class="stats-grid">
+                        <div class="stat-item"><span class="stat-value" id="st-partidas">0</span><span class="stat-label">Partidas</span></div>
+                        <div class="stat-item"><span class="stat-value text-green" id="st-vitorias">0</span><span class="stat-label">Vitórias</span></div>
+                        <div class="stat-item"><span class="stat-value" id="st-xp">0</span><span class="stat-label">XP Acumulado</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="aba-conquistas" class="tab-content">
+            <h2 class="section-title">🎖️ Suas Medalhas</h2>
+            <div class="achievements-grid">
+                <div class="achievement-card locked" id="cq-1">
+                    <div class="badge bronze"><i class="fa-solid fa-lock"></i></div>
+                    <div class="ach-info"><h4>Primeira Vitória</h4><p>Ganhe qualquer jogo na plataforma.</p></div>
+                </div>
+                <div class="achievement-card locked" id="cq-10">
+                    <div class="badge silver"><i class="fa-solid fa-lock"></i></div>
+                    <div class="ach-info"><h4>Piloto de Arcade</h4><p>Complete 10 partidas no total.</p></div>
+                </div>
+                <div class="achievement-card locked" id="cq-quiz">
+                    <div class="badge gold"><i class="fa-solid fa-lock"></i></div>
+                    <div class="ach-info"><h4>Mestre do Quiz</h4><p>Gabarite o Quiz de tecnologia.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="aba-loja" class="tab-content">
+            <h2 class="section-title">🎨 Personalização Visual</h2>
+            <p style="text-align:center; color:var(--texto-suave); margin-bottom:2rem;">Mude a cor de destaque da interface cyber.</p>
+            <div class="loja-grid">
+                <button class="btn-tema" onclick="mudarTema('#00f0ff')" style="border-color: #00f0ff;">Cyan Neon</button>
+                <button class="btn-tema" onclick="mudarTema('#bd00ff')" style="border-color: #bd00ff;">Roxo Cyber</button>
+                <button class="btn-tema" onclick="mudarTema('#39ff14')" style="border-color: #39ff14;">Verde Matrix</button>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="arcade-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="fecharArcade()">&times;</span>
+            <h2 id="modal-game-title" class="arcade-title">MÁQUINA</h2>
+            <div id="game-arena"></div>
         </div>
-    </section>
-
-    <section id="conquistas" class="achievements-section container">
-        <h2 class="section-title">🎖️ Conquistas Desbloqueadas</h2>
-        <div class="achievements-grid">
-            
-            <div class="achievement-card unlocked">
-                <div class="badge bronze"><i class="fa-solid fa-award"></i></div>
-                <div class="ach-info">
-                    <h4>Primeira Vitória</h4>
-                    <p>Você venceu sua primeira partida no GameVerse!</p>
-                </div>
-            </div>
-
-            <div class="achievement-card unlocked">
-                <div class="badge silver"><i class="fa-solid fa-award"></i></div>
-                <div class="ach-info">
-                    <h4>Veterano do Fliperama</h4>
-                    <p>Completou mais de 10 partidas no total.</p>
-                </div>
-            </div>
-
-            <div class="achievement-card locked" id="ach-quiz">
-                <div class="badge gold"><i class="fa-solid fa-lock"></i></div>
-                <div class="ach-info">
-                    <h4>Mente Brilhante</h4>
-                    <p>Acerte todas as perguntas do Quiz sem errar.</p>
-                </div>
-            </div>
-
-            <div class="achievement-card locked" id="ach-snake">
-                <div class="badge supreme"><i class="fa-solid fa-crown"></i></div>
-                <div class="ach-info">
-                    <h4>Deus do Snake</h4>
-                    <p>Supere o recorde atual do Snake Retro.</p>
-                </div>
-            </div>
-
-        </div>
-    </section>
+    </div>
 
     <footer>
-        <div class="footer-content container">
-            <p>&copy; 2026 <strong>Pixel Arena</strong> - Todos os direitos reservados.</p>
-            <p class="footer-slogan">Desenvolvido sob o ecossistema GameVerse.</p>
+        <div class="container">
+            <p>&copy; 2026 <strong>Pixel Arena</strong> | GameVerse Central</p>
         </div>
     </footer>
 
