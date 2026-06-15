@@ -10,7 +10,7 @@
 
     <header>
         <div class="logo" onclick="navegar('home')">Tech<span>Future</span></div>
-        <nav>
+        <nav aria-label="Navegação Principal">
             <button onclick="navegar('home')">Home</button>
             <button onclick="navegar('ia')">Inteligência Artificial</button>
             <button onclick="navegar('computadores')">Computadores</button>
@@ -19,7 +19,7 @@
             <button onclick="navegar('robotica')">Robótica</button>
             <button onclick="navegar('extras')">Explorar Mais</button>
         </nav>
-        <div class="xp-container">
+        <div class="xp-container" aria-live="polite">
             <span id="badge-atual">🥉 Primeiro Quiz Concluído</span>
             <div class="barra-progresso"><div id="progresso-interno"></div></div>
         </div>
@@ -28,6 +28,30 @@
     <main id="conteudo-principal">
         </main>
 
+    <div class="menu-acessibilidade-container">
+        <button class="btn-flutuante-acessibilidade" onclick="togglePainelAcessibilidade()" title="Opções de Acessibilidade" aria-label="Abrir recursos de acessibilidade">♿</button>
+        <div id="painel-acessibilidade" class="painel-acessibilidade-conteudo" role="region" aria-label="Painel de ferramentas de acessibilidade">
+            <h4>Acessibilidade</h4>
+            <button onclick="alterarFonte(1)">➕ Aumentar Letra</button>
+            <button onclick="alterarFonte(-1)">➖ Diminuir Letra</button>
+            <button onclick="toggleAltoContraste()">🌓 Alto Contraste</button>
+            <button onclick="toggleDislexia()">📖 Fonte p/ Dislexia</button>
+            <button onclick="toggleDaltonismo()">👁️ Modo Daltonismo</button>
+        </div>
+    </div>
+
+    <div vw class="enabled">
+        <div vw-access-button class="active"></div>
+        <div vw-plugin-wrapper>
+            <div class="vw-plugin-top-wrapper"></div>
+        </div>
+    </div>
+
+    <div id="cookies-banner" class="lgpd-banner" role="alert">
+        <p>Utilizamos cookies para garantir a melhor experiência educativa em nosso portal. Ao continuar, você concorda com nossa política de privacidade.</p>
+        <button class="btn-neon" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="document.getElementById('cookies-banner').style.display='none'">Aceitar</button>
+    </div>
+
     <footer>
         <div class="footer-content">
             <p><strong>TechFuture</strong> - Uma viagem pela evolução da tecnologia e suas transformações.</p>
@@ -35,6 +59,11 @@
             <p class="links-uteis">Links Úteis: <span onclick="navegar('home')">Início</span> | <span onclick="navegar('extras')">Glossário</span> | <span onclick="navegar('extras')">Estatísticas</span></p>
         </div>
     </footer>
+
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+    <script>
+        new window.VLibras.Widget('https://vlibras.gov.br/app');
+    </script>
 
     <script src="main.js"></script>
 </body>

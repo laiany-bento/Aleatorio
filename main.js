@@ -1,48 +1,58 @@
-// Gerenciamento global de progresso (Gamificação)
+// Gerenciamento e Controle de Gamificação Base
 let progressoGlobal = 20;
 let topicosExplorados = new Set(['home']);
+let tamanhoFonteBase = 100; // Representado em porcentagem (%)
 
-// Base de dados integral mapeando rigorosamente o roteiro fornecido
+// Banco de Dados Estrutural Unificado do Roteiro Original
 const paginas = {
     home: `
-        <section class="hero">
+        <section class="hero" aria-label="Apresentação Principal">
             <h1>Tech<span>Future</span></h1>
             <p>"Uma viagem pela evolução da tecnologia e suas transformações no mundo moderno."</p>
             <button class="btn-neon" onclick="navegar('ia')">➡️ Explorar Conteúdo</button>
         </section>
 
-        <section>
+        <section aria-label="Texto de Introdução">
             <h2>Introdução</h2>
             <p>A tecnologia evoluiu de maneira avassaladora ao longo dos anos. Das primeiras ferramentas analógicas e mecânicas até as redes neurais integradas de hoje, a computação deixou de ser uma ferramenta de nicho laboratorial para se transformar no tecido conjuntivo da sociedade global. Ela redefine indústrias, dita dinâmicas econômicas e altera fundamentalmente a forma como nos comunicamos, trabalhamos e vivemos.</p>
         </section>
 
         <h2>Destaques dos Temas</h2>
         <div class="grid-temas">
-            <div class="card-tema" onclick="navegar('ia')">
+            <div class="card-tema" onclick="navegar('ia')" role="button" tabindex="0">
                 <h3>🤖 História da IA</h3>
                 <p>Do Teste de Turing até os modernos ecossistemas de Inteligência Artificial Generativa.</p>
             </div>
-            <div class="card-tema" onclick="navegar('computadores')">
+            <div class="card-tema" onclick="navegar('computadores')" role="button" tabindex="0">
                 <h3>💻 Evolução dos Computadores</h3>
                 <p>A fantástica miniaturização do hardware, indo das válvulas aos microprocessadores.</p>
             </div>
-            <div class="card-tema" onclick="navegar('seguranca')">
+            <div class="card-tema" onclick="navegar('seguranca')" role="button" tabindex="0">
                 <h3>🔒 Segurança na Internet</h3>
                 <p>Aprenda a mitigar ameaças, prevenir engenharia social e blindar suas contas.</p>
             </div>
-            <div class="card-tema" onclick="navegar('deepfakes')">
+            <div class="card-tema" onclick="navegar('deepfakes')" role="button" tabindex="0">
                 <h3>🎭 Deepfakes: Desafios</h3>
                 <p>O limiar entre a inovação cinematográfica e os riscos de manipulação informativa.</p>
             </div>
-            <div class="card-tema" onclick="navegar('robotica')">
+            <div class="card-tema" onclick="navegar('robotica')" role="button" tabindex="0">
                 <h3>🦾 Robótica no Cotidiano</h3>
                 <p>A automação mecânica inteligente transformando indústrias, lares e a medicina.</p>
             </div>
         </div>
 
-        <div style="background:var(--bg-card); padding:2rem; border-radius:8px; margin-top:2rem; border:1px solid var(--azul-neon);">
+        <div style="background:var(--bg-card); padding:2rem; border-radius:8px; margin-top:2rem; border:1px solid var(--azul-piscina);">
             <h3>🎲 Curiosidade do Dia</h3>
-            <p id="curiosidade-texto">O ENIAC ocupava aproximadamente 167 m² e pesava cerca de 27 toneladas.</p>
+            <p id="curiosidade-texto" style="margin-bottom:0;">O ENIAC ocupava aproximadamente 167 m² e pesava cerca de 27 toneladas.</p>
+        </div>
+
+        <div style="background:var(--bg-card); padding:2rem; border-radius:8px; margin-top:2rem; text-align:center; border:1px dashed var(--azul-escuro);">
+            <h3>📩 Fique por dentro do TechFuture</h3>
+            <p>Inscreva seu e-mail para receber pílulas semanais sobre o futuro da computação e robótica.</p>
+            <div style="display:flex; gap:10px; justify-content:center; max-width:500px; margin:0 auto; flex-wrap:wrap;">
+                <input type="email" placeholder="Seu melhor e-mail..." style="flex:1; padding:0.8rem; border-radius:5px; border:1px solid var(--azul-escuro); min-width:200px;" aria-label="Endereço de e-mail">
+                <button class="btn-neon" style="padding:0.8rem 1.5rem;" onclick="alert('Inscrição simulada com sucesso! Obrigado por acompanhar o projeto.')">Cadastrar</button>
+            </div>
         </div>
     `,
     ia: `
@@ -75,9 +85,9 @@ const paginas = {
 
         <h3>💡 Aplicações da IA</h3>
         <ul>
-            <li><strong>Assistentes Virtuais:</strong> Modelos conversacionais que processam linguagem natural corporativa ou residencial.</li>
+            <li><strong>Assistentes Virtuais:</strong> Modelos conversacionais que processam linguagem natural.</li>
             <li><strong>Reconhecimento Facial:</strong> Sistemas de segurança biométrica avançada em tempo real.</li>
-            <li><strong>Tradução Automática:</strong> Redes neurais que traduzem idiomas de forma contextualizada instantaneamente.</li>
+            <li><strong>Tradução Automática:</strong> Redes neurais que traduzem idiomas de forma contextualizada.</li>
             <li><strong>Medicina e Educação:</strong> Diagnósticos por imagem assistidos e ecossistemas adaptativos de aprendizagem.</li>
         </ul>
 
@@ -95,7 +105,7 @@ const paginas = {
             <p>Em qual ano o supercomputador Deep Blue derrotou o campeão mundial de xadrez Garry Kasparov?</p>
             <button class="opcao-quiz" onclick="validarQuiz(this, false)">1956</button>
             <button class="opcao-quiz" onclick="validarQuiz(this, true)">1997</button>
-            <button class="opcao-quiz" onclick="validarQuiz(this, 2010)">2010</button>
+            <button class="opcao-quiz" onclick="validarQuiz(this, false)">2010</button>
             <span class="resultado-quiz"></span>
         </div>
     `,
@@ -131,21 +141,25 @@ const paginas = {
         <p>A transição de máquinas imensas como o <strong>ENIAC</strong> e o <strong>UNIVAC</strong> para o advento do <strong>IBM PC</strong>, culminando nos modernos Notebooks e Smartphones ultraportáteis.</p>
         
         <table style="width:100%; background:var(--bg-card); border-collapse: collapse; margin: 1.5rem 0;">
-            <tr style="border-bottom: 2px solid var(--roxo-tech); text-align: left;">
-                <th style="padding: 10px;">Característica</th>
-                <th style="padding: 10px;">Computador Antigo</th>
-                <th style="padding: 10px;">Computador Atual</th>
-            </tr>
-            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                <td style="padding: 10px;">Dimensões</td>
-                <td style="padding: 10px; color: var(--vermelho-alerta)">Grande (Salas Inteiras)</td>
-                <td style="padding: 10px; color: var(--verde-sucesso)">Compacto (Bolso/Mesa)</td>
-            </tr>
-            <tr>
-                <td style="padding: 10px;">Desempenho</td>
-                <td style="padding: 10px; color: var(--vermelho-alerta)">Lento / Pouca Memória</td>
-                <td style="padding: 10px; color: var(--verde-sucesso)">Rápido / Alta Capacidade</td>
-            </tr>
+            <thead>
+                <tr style="border-bottom: 2px solid var(--azul-piscina); text-align: left;">
+                    <th style="padding: 10px; color: var(--azul-escuro)">Característica</th>
+                    <th style="padding: 10px; color: var(--azul-escuro)">Computador Antigo</th>
+                    <th style="padding: 10px; color: var(--azul-escuro)">Computador Atual</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+                    <td style="padding: 10px;">Dimensões</td>
+                    <td style="padding: 10px; color: var(--vermelho-alerta)">Grande (Salas Inteiras)</td>
+                    <td style="padding: 10px; color: var(--verde-sucesso)">Compacto (Bolso/Mesa)</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px;">Desempenho</td>
+                    <td style="padding: 10px; color: var(--vermelho-alerta)">Lento / Pouca Memória</td>
+                    <td style="padding: 10px; color: var(--verde-sucesso)">Rápido / Alta Capacidade</td>
+                </tr>
+            </tbody>
         </table>
 
         <h3>📊 Dados e Estatísticas</h3>
@@ -182,12 +196,12 @@ const paginas = {
         </ul>
 
         <h3>🛡️ Como se Proteger</h3>
-        <p>Utilize senhas fortes, habilite a verificação em duas etapas (2FA) em todos os serviços, evite clicar em links suspeitos e mantenha patches de atualizações de sistemas operacionais sempre em dia.</p>
+        <p>Utilize senhas fortes, habilite a verificação em duas etapas (2FA) em todos os serviços, evite clicar em links suspeitos e mantenha patches de atualizações sempre em dia.</p>
 
-        <div class="simulador-senha" style="background:var(--azul-escuro); padding:2rem; border-radius:8px; margin:2rem 0; border: 1px solid var(--roxo-tech);">
+        <div class="simulador-senha" style="background:var(--bg-card); padding:2rem; border-radius:8px; margin:2rem 0; border: 1px solid var(--azul-escuro);">
             <h3>🛠️ Simulador de Senha Segura</h3>
             <p>Insira uma senha hipotética abaixo para avaliar a força algorítmica:</p>
-            <input type="password" oninput="testarSenha(this.value)" placeholder="Digite sua senha de teste aqui...">
+            <input type="password" oninput="testarSenha(this.value)" placeholder="Digite sua senha de teste aqui..." aria-label="Campo para teste de senha">
             <div id="resultado-senha" class="status-senha">Aguardando entrada de dados...</div>
         </div>
 
@@ -210,10 +224,10 @@ const paginas = {
         <h2>🎭 Deepfakes: Riscos e Desafios</h2>
         <p>Deepfakes são mídias sintéticas nas quais uma pessoa tem sua imagem ou voz substituída pela IA, de forma extremamente convincente.</p>
 
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem; margin:2rem 0;">
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:1.5rem; margin:2rem 0;">
             <div style="background:var(--bg-card); padding:1.5rem; border-radius:8px;">
                 <h3>🟢 Benefícios e Usos Positivos</h3>
-                <p>Dublagens realistas na indústria do cinema, restauração de materiais audiovisuais históricos e ferramentas educacionais interativas imersivas.</p>
+                <p>Dublagens realistas na indústria do cinema, restauração de materiais históricos e ferramentas educacionais interativas imersivas.</p>
             </div>
             <div style="background:var(--bg-card); padding:1.5rem; border-radius:8px;">
                 <h3>🔴 Riscos e Ameaças</h3>
@@ -251,7 +265,7 @@ const paginas = {
         <h2>🦾 Robótica no Cotidiano</h2>
         <p>A robótica integra mecânica estrutural e linhas lógicas de código para automatizar tarefas físicas no mundo real.</p>
 
-        <h3>🌐 Áreas de Aplicação</h3>
+        <h3>🌐 Áreas de Atuação</h3>
         <ul>
             <li><strong>Saúde:</strong> Cirurgias robóticas de altíssima precisão guiadas remotamente por especialistas.</li>
             <li><strong>Indústria e Agricultura:</strong> Linhas automotivas pesadas e colheitadeiras autônomas guiadas por GPS.</li>
@@ -279,15 +293,15 @@ const paginas = {
         <h2>📖 Glossário Tecnológico</h2>
         <p>Clique em qualquer termo abaixo para expandir o seu conceito técnico:</p>
         
-        <div class="glossario-termo" onclick="this.querySelector('p').style.display = this.querySelector('p').style.display === 'block' ? 'none' : 'block'">
+        <div class="glossario-termo" onclick="expandirTermo(this)">
             <strong>⚡ Algoritmo</strong>
             <p>Sequência finita de regras e instruções lógicas estruturadas para resolver um problema.</p>
         </div>
-        <div class="glossario-termo" onclick="this.querySelector('p').style.display = this.querySelector('p').style.display === 'block' ? 'none' : 'block'">
+        <div class="glossario-termo" onclick="expandirTermo(this)">
             <strong>🧠 Deep Learning</strong>
             <p>Modelagem de redes neurais profundas inspiradas na estrutura cerebral para reconhecimento de padrões complexos.</p>
         </div>
-        <div class="glossario-termo" onclick="this.querySelector('p').style.display = this.querySelector('p').style.display === 'block' ? 'none' : 'block'">
+        <div class="glossario-termo" onclick="expandirTermo(this)">
             <strong>🛡️ Engenharia Social</strong>
             <p>Método de ataque focado na manipulação psicológica humana para obtenção de dados sigilosos.</p>
         </div>
@@ -308,18 +322,18 @@ const paginas = {
 
         <h2>📊 Estatísticas de Mercado</h2>
         <div class="grid-extra">
-            <div class="card-stat" style="border-top: 3px solid var(--azul-neon)">
+            <div class="card-stat" style="border-top: 3px solid var(--azul-piscina)">
                 <h3>+150B</h3>
                 <p>Dispositivos IoT conectados previstos no mundo.</p>
             </div>
-            <div class="card-stat" style="border-top: 3px solid var(--roxo-tech)">
+            <div class="card-stat" style="border-top: 3px solid var(--azul-escuro)">
                 <h3>85%</h3>
                 <p>Das indústrias automatizaram processos críticos.</p>
             </div>
         </div>
 
         <h2>🌎 Mapa da Tecnologia</h2>
-        <div style="background:var(--bg-card); padding:1.5rem; border-radius:8px; border:1px solid var(--roxo-tech)">
+        <div style="background:var(--bg-card); padding:1.5rem; border-radius:8px; border:1px solid var(--azul-piscina)">
             <p>📍 <strong>Vale do Silício (EUA):</strong> Polo global de inovação de software e grandes Big Techs.</p>
             <p>📍 <strong>Pensilvânia (EUA):</strong> Local de nascimento físico do histórico supercomputador ENIAC.</p>
             <p>📍 <strong>Tóquio (Japão):</strong> Epicentro mundial de automação de robótica industrial avançada.</p>
@@ -332,7 +346,7 @@ const paginas = {
         <h2>🏆 Sistema de Gamificação (Suas Conquistas)</h2>
         <div class="grid-conquistas">
             <div class="card-conquista desbloqueada" id="conq-1">
-                <span>🥉</span>
+                <span>便</span>
                 <div>
                     <h4>Primeiro Quiz Concluído</h4>
                     <p>Você iniciou sua trilha de aprendizado.</p>
@@ -360,21 +374,19 @@ const paginas = {
     `
 };
 
-// Gerenciador de navegação SPA
+// Mecanismo Navegacional Single Page Application (SPA)
 function navegar(paginaAlvo) {
     const mainContainer = document.getElementById('conteudo-principal');
-    
     if (paginas[paginaAlvo]) {
         mainContainer.innerHTML = paginas[paginaAlvo];
         window.scrollTo({ top: 0, behavior: 'smooth' });
         
-        // Contagem de páginas visualizadas para gamificação
         topicosExplorados.add(paginaAlvo);
         
+        // Desbloqueia conquista ao explorar todos os tópicos
         if (topicosExplorados.size >= 5) {
             const cardConq2 = document.getElementById('conq-2');
             if (cardConq2) cardConq2.classList.add('desbloqueada');
-            
             if (progressoGlobal < 70) {
                 progressoGlobal = 70;
                 atualizarInterfaceGamificacao();
@@ -383,28 +395,23 @@ function navegar(paginaAlvo) {
     }
 }
 
-// Mecanismo de Atualização da Barra e Badges de XP
+// Mecanismo de Atualização da Gamificação
 function atualizarInterfaceGamificacao() {
     const barra = document.getElementById('progresso-interno');
     const badge = document.getElementById('badge-atual');
-    
     if (barra && badge) {
         barra.style.width = `${progressoGlobal}%`;
-        
         if (progressoGlobal >= 100) {
             badge.innerText = "🏆 Especialista Técnico Concluído";
-            badge.style.color = "var(--azul-neon)";
         } else if (progressoGlobal >= 70) {
             badge.innerText = "🥇 Mestre da Segurança Digital";
-            badge.style.color = "var(--azul-neon)";
         } else if (progressoGlobal >= 40) {
             badge.innerText = "🥈 Explorador da Tecnologia";
-            badge.style.color = "var(--roxo-tech)";
         }
     }
 }
 
-// Lógica Funcional dos Quizzes
+// Validador e Motor Interativo dos Quizzes
 function validarQuiz(botaoClicado, eCorreto) {
     const container = botaoClicado.parentElement;
     const botoes = container.querySelectorAll('.opcao-quiz');
@@ -414,7 +421,7 @@ function validarQuiz(botaoClicado, eCorreto) {
     
     if (eCorreto) {
         botaoClicado.style.backgroundColor = "var(--verde-sucesso)";
-        botaoClicado.style.borderColor = "var(--verde-sucesso)";
+        botaoClicado.style.color = "white";
         feedback.innerText = "🟢 Resposta Correta! Você absorveu o conteúdo.";
         feedback.style.color = "var(--verde-sucesso)";
         
@@ -423,13 +430,13 @@ function validarQuiz(botaoClicado, eCorreto) {
         atualizarInterfaceGamificacao();
     } else {
         botaoClicado.style.backgroundColor = "var(--vermelho-alerta)";
-        botaoClicado.style.borderColor = "var(--vermelho-alerta)";
+        botaoClicado.style.color = "white";
         feedback.innerText = "🔴 Resposta incorreta. Revise o material de estudo acima.";
         feedback.style.color = "var(--vermelho-alerta)";
     }
 }
 
-// Lógica do Simulador Analisador de Senhas
+// Analisador Algorítmico do Simulador de Senhas
 function testarSenha(senha) {
     const output = document.getElementById('resultado-senha');
     if (!output) return;
@@ -462,7 +469,41 @@ function testarSenha(senha) {
     }
 }
 
-// Execução imediata ao carregar a página
+// Função auxiliar de controle do Glossário Clicável
+function expandirTermo(elemento) {
+    const p = elemento.querySelector('p');
+    p.style.display = (p.style.display === 'block') ? 'none' : 'block';
+}
+
+// ==========================================================================
+// SEÇÃO ACESSIBILIDADE FUNCIONAL (REQUISITO DA BARRA FLUTUANTE)
+// ==========================================================================
+
+function togglePainelAcessibilidade() {
+    const painel = document.getElementById('painel-acessibilidade');
+    painel.style.display = (painel.style.display === 'flex') ? 'none' : 'flex';
+}
+
+function alterarFonte(direcao) {
+    tamanhoFonteBase += (direcao * 10);
+    if (tamanhoFonteBase < 80) tamanhoFonteBase = 80;
+    if (tamanhoFonteBase > 150) tamanhoFonteBase = 150;
+    document.body.style.fontSize = `${tamanhoFonteBase}%`;
+}
+
+function toggleAltoContraste() {
+    document.body.classList.toggle('alto-contraste');
+}
+
+function toggleDislexia() {
+    document.body.classList.toggle('fonte-dislexia');
+}
+
+function toggleDaltonismo() {
+    document.body.classList.toggle('modo-daltonismo');
+}
+
+// Inicialização imediata de carregamento
 window.onload = () => {
     navegar('home');
     atualizarInterfaceGamificacao();
