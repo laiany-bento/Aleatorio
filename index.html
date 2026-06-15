@@ -3,179 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GameVerse | Central Arcade Futurista</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>TechFuture – A Evolução da Tecnologia</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="bg-stars"></div>
-
     <header>
-        <div class="navbar container">
-            <div class="logo">
-                <i class="fa-solid fa-gamepad"></i> <span>GameVerse</span>
-            </div>
-            <div class="player-hud">
-                <span id="hud-level"><i class="fa-solid fa-ranking-star"></i> Nível 1</span>
-                <span id="hud-coins"><i class="fa-solid fa-coins" style="color: #ffd700;"></i> 0 XP</span>
-            </div>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="#" class="nav-btn active" data-target="aba-inicio">Início</a></li>
-                    <li><a href="#" class="nav-btn" data-target="aba-jogos">Jogos</a></li>
-                    <li><a href="#" class="nav-btn" data-target="aba-ranking">Ranking</a></li>
-                    <li><a href="#" class="nav-btn" data-target="aba-conquistas">Conquistas</a></li>
-                    <li><a href="#" class="nav-btn" data-target="aba-loja"><i class="fa-solid fa-shop"></i> Loja</a></li>
-                </ul>
-            </nav>
+        <div class="logo" onclick="navegar('home')">Tech<span>Future</span></div>
+        <nav>
+            <button onclick="navegar('home')">Home</button>
+            <button onclick="navegar('ia')">Inteligência Artificial</button>
+            <button onclick="navegar('computadores')">Computadores</button>
+            <button onclick="navegar('seguranca')">Segurança</button>
+            <button onclick="navegar('deepfakes')">Deepfakes</button>
+            <button onclick="navegar('robotica')">Robótica</button>
+            <button onclick="navegar('extras')">Explorar Mais</button>
+        </nav>
+        <div class="xp-container">
+            <span id="badge-atual">🥉 Primeiro Quiz Concluído</span>
+            <div class="barra-progresso"><div id="progresso-interno"></div></div>
         </div>
     </header>
 
-    <main class="container content-wrapper">
-
-        <section id="aba-inicio" class="tab-content active">
-            <div class="hero-content">
-                <h1>GAMEVERSE</h1>
-                <p class="slogan">Diversão sem limites em um só lugar.</p>
-                <p class="subtitle">Evolua seu nível, ganhe XP e domine o fliperama do futuro.</p>
-                <button class="btn-glow" onclick="mudarAba('aba-jogos')">JOGAR AGORA</button>
-            </div>
-        </section>
-
-        <section id="aba-jogos" class="tab-content">
-            <h2 class="section-title">Escolha sua Máquina</h2>
-            <div class="games-grid">
-                
-                <div class="arcade-card">
-                    <div class="card-neon-border" style="background: var(--azul-neon);"></div>
-                    <div class="card-content">
-                        <i class="fa-solid fa-hashtag game-icon" style="color: var(--azul-neon);"></i>
-                        <h3>Jogo da Velha</h3>
-                        <p>Enfrente nosso algoritmo de inteligência artificial.</p>
-                        <button class="btn-play" onclick="abrirJogo('Jogo da Velha')">Iniciar Cabine</button>
-                    </div>
-                </div>
-
-                <div class="arcade-card">
-                    <div class="card-neon-border" style="background: var(--roxo-neon);"></div>
-                    <div class="card-content">
-                        <i class="fa-solid fa-hand-fist game-icon" style="color: var(--roxo-neon);"></i>
-                        <h3>Pedra, Papel, Tesoura</h3>
-                        <p>O clássico Jokenpô com engine de recompensas rápidos.</p>
-                        <button class="btn-play" onclick="abrirJogo('Pedra, Papel e Tesoura')">Iniciar Cabine</button>
-                    </div>
-                </div>
-
-                <div class="arcade-card">
-                    <div class="card-neon-border" style="background: var(--verde-neon);"></div>
-                    <div class="card-content">
-                        <i class="fa-solid fa-lightbulb game-icon" style="color: var(--verde-neon);"></i>
-                        <h3>Quiz Geek</h3>
-                        <p>Responda 5 perguntas sobre games e tecnologia.</p>
-                        <button class="btn-play" onclick="abrirJogo('Quiz')">Iniciar Cabine</button>
-                    </div>
-                </div>
-
-                <div class="arcade-card">
-                    <div class="card-neon-border" style="background: #ff0055;"></div>
-                    <div class="card-content">
-                        <i class="fa-solid fa-skull game-icon" style="color: #ff0055;"></i>
-                        <h3>Jogo da Forca</h3>
-                        <p>Descubra o termo secreto do universo tech antes de ser enforcado.</p>
-                        <button class="btn-play" onclick="abrirJogo('Forca')">Iniciar Cabine</button>
-                    </div>
-                </div>
-
-                <div class="arcade-card">
-                    <div class="card-neon-border" style="background: #ffaa00;"></div>
-                    <div class="card-content">
-                        <i class="fa-solid fa-worm game-icon" style="color: #ffaa00;"></i>
-                        <h3>Snake Retro</h3>
-                        <p>Use as setas do teclado ou botões para coletar pixels e crescer.</p>
-                        <button class="btn-play" onclick="abrirJogo('Snake')">Iniciar Cabine</button>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <section id="aba-ranking" class="tab-content">
-            <div class="ranking-layout">
-                <div class="ranking-box">
-                    <h2 class="section-title"><i class="fa-solid fa-trophy text-green"></i> Recordes do Fliperama</h2>
-                    <table class="ranking-table">
-                        <thead>
-                            <tr><th>Jogo</th><th>Recordista</th><th>Melhor Marca</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>Snake Retro</td><td>Neo_Player</td><td class="text-green" id="rank-snake-val">150 pts</td></tr>
-                            <tr><td>Quiz Geek</td><td>ByteQueen</td><td class="text-green">5/5 Acertos</td></tr>
-                            <tr><td>Forca</td><td>Chrono</td><td class="text-green">Erros zero</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="stats-box">
-                    <h2 class="section-title"><i class="fa-solid fa-chart-pie"></i> Seu Perfil</h2>
-                    <div class="stats-grid">
-                        <div class="stat-item"><span class="stat-value" id="st-partidas">0</span><span class="stat-label">Partidas Jogadas</span></div>
-                        <div class="stat-item"><span class="stat-value text-green" id="st-vitorias">0</span><span class="stat-label">Vitórias Totais</span></div>
-                        <div class="stat-item"><span class="stat-value" id="st-xp">0</span><span class="stat-label">Pontos de XP</span></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="aba-conquistas" class="tab-content">
-            <h2 class="section-title">🎖️ Suas Conquistas</h2>
-            <div class="achievements-grid">
-                <div class="achievement-card locked" id="cq-1">
-                    <div class="badge bronze"><i class="fa-solid fa-lock"></i></div>
-                    <div class="ach-info"><h4>Primeira Vitória</h4><p>Vença qualquer jogo no GameVerse.</p></div>
-                </div>
-                <div class="achievement-card locked" id="cq-10">
-                    <div class="badge silver"><i class="fa-solid fa-lock"></i></div>
-                    <div class="ach-info"><h4>Piloto de Fliperama</h4><p>Complete um total de 10 rodadas.</p></div>
-                </div>
-                <div class="achievement-card locked" id="cq-quiz">
-                    <div class="badge gold"><i class="fa-solid fa-lock"></i></div>
-                    <div class="ach-info"><h4>Mestre do Quiz</h4><p>Acerte todas as 5 questões seguidas do Quiz.</p></div>
-                </div>
-                <div class="achievement-card locked" id="cq-snake">
-                    <div class="badge supreme"><i class="fa-solid fa-lock"></i></div>
-                    <div class="ach-info"><h4>Recordista de Pixels</h4><p>Faça mais de 50 pontos no Snake Retro.</p></div>
-                </div>
-            </div>
-        </section>
-
-        <section id="aba-loja" class="tab-content">
-            <h2 class="section-title">🎨 Painel Neon Custom</h2>
-            <p style="text-align:center; color:var(--texto-suave); margin-bottom:2rem;">Gaste 50 XP para sintonizar a cor dos circuitos secundários.</p>
-            <div class="loja-grid">
-                <button class="btn-tema" onclick="comprarTema('#00f0ff', 0)" style="border-color: #00f0ff;">Cyan Inicial (Grátis)</button>
-                <button class="btn-tema" onclick="comprarTema('#bd00ff', 50)" style="border-color: #bd00ff;">Roxo Cyber (50 XP)</button>
-                <button class="btn-tema" onclick="comprarTema('#39ff14', 50)" style="border-color: #39ff14;">Verde Matrix (50 XP)</button>
-            </div>
-            <p id="loja-msg" style="text-align:center; margin-top:2rem; font-family:'Orbitron'; font-size:0.9rem; color:#ff0055;"></p>
-        </section>
-
-    </main>
-
-    <div id="arcade-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="fecharArcade()">&times;</span>
-            <h2 id="modal-game-title" class="arcade-title">MÁQUINA</h2>
-            <div id="game-arena"></div>
-        </div>
-    </div>
+    <main id="conteudo-principal">
+        </main>
 
     <footer>
-        <div class="container">
-            <p>&copy; 2026 <strong>Pixel Arena</strong> | GameVerse Central</p>
+        <div class="footer-content">
+            <p><strong>TechFuture</strong> - Uma viagem pela evolução da tecnologia e suas transformações.</p>
+            <p>Ano de Desenvolvimento: 2026 | Créditos: Projeto Educacional Informativo</p>
+            <p class="links-uteis">Links Úteis: <span onclick="navegar('home')">Início</span> | <span onclick="navegar('extras')">Glossário</span> | <span onclick="navegar('extras')">Estatísticas</span></p>
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>
